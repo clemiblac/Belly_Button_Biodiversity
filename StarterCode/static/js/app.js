@@ -8,6 +8,50 @@ function buildPlot(){
         .then(function(data){
             console.log(data)
             //3 main parts of samples.json -- names, metadata,samples
+
+            ///////////  BUILDING DROP DOWN MENU FOR EACH TEST SUBJECT /////////////////////
+            //saving "names" Array in samples.json to a variable
+            var select_id=data.names;
+            //console.log("Test subject ID No.")
+            //console.log(select_id);
+
+            //Select drowdown 
+            var drpdwnoption = d3.select("#selDataset");
+            //Append "option" for each test subject ID in HTML
+            select_id.forEach((id) => {
+                var row=drpdwnoption.append("option");
+                //ADD Test subject IDs to dropdown menu
+                row.text(id);
+            });
+
+
+            /////////////   FILLING IN DEMOGRAPHIC INFO  /////////////////
+            console.log("Demographic info")
+            var demographic_info = data.metadata[0];
+            console.log(demographic_info);
+
+            //Loading data to web page
+            var demo=d3.select("#sample-metadata")
+
+            d1=demo.append("p");
+            d1.text(`ID: ${demographic_info.id}`)
+            d2=demo.append("p");
+            d2.text(`ETHNICITY: ${demographic_info.ethnicity}`)
+            d3=demo.append("p");
+            d3.text(`GENDER: ${demographic_info.gender}`)
+            d4=demo.append("p");
+            d4.text(`AGE: ${demographic_info.age}`)
+            d5=demo.append("p");
+            d5.text(`LOCATION: ${demographic_info.location}`)
+            d6=demo.append("p");
+            d6.text(`BBTYPE: ${demographic_info.bbtype}`)
+            d7=demo.append("p");
+            d7.text(`WFREQ: ${demographic_info.wfreq}`)
+            
+
+
+
+            ///// Exploring data for plots ///////////////////
             console.log("samples subsection of samples.json");
             console.log(data.samples);
             ////////////////////////////////////////////////////////////////////////
@@ -59,7 +103,7 @@ function buildPlot(){
                 
             // 7. Define our plot layout
             var layout = {
-                title: "Top 10 OTUs found in test subject",
+                title: `Top 10 OTUs found in test subject`,
                 xaxis: { title:"sample_values"  },
                 yaxis: { title: "otu ids"}
             };
@@ -92,32 +136,10 @@ function buildPlot(){
             Plotly.newPlot("bubble", Bubble,layout);
 
 
-            //Demographic info
-            console.log("Demographic info")
-          
-            var demographic_info = data.metadata[0];
-            console.log(demographic_info);
+           
 
 
-            //Adding all the drop down options
-            select_id=data.names;
-            console.log(select_id);
-            //Select drowdown 
-            var drpdwnoption = d3.select("#selDataset");
-            //Append "option"
-            select_id.forEach((id) => {
-                var row=drpdwnoption.append("option");
-                for (var i=0; i < select_id.length; i++){
-                    console.log(select_id[i])
-                    //row.text(i)
-                }
-                
-            });
-            
-
-
-
-
+        
            /* function getData() {
                 var dropdownMenu = d3.select("#selData").node();
 

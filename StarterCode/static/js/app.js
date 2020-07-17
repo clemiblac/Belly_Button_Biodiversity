@@ -15,21 +15,25 @@ function buildPlot(){
         //Select drowdown 
         var drpdwnoption = d3.select("#selDataset");
         //Append "option" for each test subject ID in HTML
-        select_id.forEach((id) => {
+        select_id.forEach((person) => {
             var row=drpdwnoption.append("option");
             //ADD Test subject IDs to dropdown menu
-            row.text(id);
-            row.property("value",id)
+            row.text(person);
+            row.property("value",person)
 
         });
 
-
+        var choice='940';
+        
+        
         /////////////   FILLING IN DEMOGRAPHIC INFO  /////////////////
-        //first person only
-        var demographic_info = data.metadata[0];
+        var metadata_values=data.metadata;
+        var demographic_info=metadata_values.filter(s=>s.id==choice)
+        var demographic_info=demographic_info[0]
         //console.log("Demographic info")
-        //console.log(demographic_info);
-
+        //console.log(demographic_info)
+        
+    
         //Loading data to web page
         var demo=d3.select("#sample-metadata")
 
@@ -53,59 +57,73 @@ function buildPlot(){
 
         ///// Exploring data for plots ///////////////////
         console.log("samples subsection of samples.json");
-        console.log(data.samples);
+        var sample_d=data.samples;
+        //console.log("sample data");
+        //console.log(sample_d);
+        var sample_record=sample_d.filter(s=>s.id==choice)
+        sample_record=sample_record[0]
+        console.log("sample of choice")
+        console.log(sample_record)
         ////////////////////////////////////////////////////////////////////////
         //Use `sample_values` as the values for the bar chart.
-        var values = data.samples.map(s =>  s.sample_values.slice(0,11));
+        var values=sample_record.sample_values
         console.log("samples_values/values");
         console.log(values);
 
         //Use `otu_ids` as the labels for the bar chart.
-        var labels = data.samples.map(s =>  s.otu_ids.slice(0,11));
+        var labels = sample_record.otu_ids;
         console.log("otu_ids/labels");
         console.log(labels);
 
         //Use `otu_labels` as the hovertext for the chart.
-        var hovertext = data.samples.map(s =>  s.otu_labels.slice(0,11));
+        var hovertext = sample_record.otu_labels;
         console.log("otu_labels/hovertext");
         console.log(hovertext);
 
-        //test subject id
-        var s_940=data.samples.slice(0,1);
-        //hbar variables
-        var bar_values_940 = s_940.map(s =>  s.sample_values.slice(0,11));
-        var bar_labels_940 = s_940.map(s =>  s.otu_ids.slice(0,11));
-        var bar_hover_940 = s_940.map(s =>  s.otu_labels.slice(0,11));
 
-        console.log("940 Sample values");
-        console.log(bar_values_940);
-        console.log("940 OTU ID");
-        console.log(bar_labels_940);
+        //hbar variables
+        var bar_values = values;
+        var bar_labels= labels;
+        var bar_hover = hovertext;
+
+        console.log("choice sample values");
+        console.log(bar_values);
+        console.log("choice OTU IDs");
+        console.log(bar_labels);
 
         //bubble variables
-        var bubble_values_940 = s_940.map(s =>  s.sample_values);
-        var bubble_labels_940 = s_940.map(s =>  s.otu_ids);
-        var bubble_hover_940 = s_940.map(s =>  s.otu_labels);
+        var bubble_values = values;
+        var bubble_labels = labels;
+        var bubble_hover = hovertext;
 
 
         //Plot Code
-        //subject_940
-
         // Display the default plot
         
         //  Create  trace.
         var hbar_data = [{
             type: 'bar',
-            x: bar_values_940[0],
-            y: bar_labels_940[0],
-            orientation:'h'
+            x: bar_values,
+            //y: bar_labels,
+
+            transforms: [{
+                type: 'sort',
+                target: 'x',
+                order: 'ascending'
+            },{
+                type: 'filter',
+                target: 'x',
+                operation: '>',
+                value: 1
+            }], 
+            
         }];
             
         // 7. Define our plot layout
         var layout = {
             title: `Top 10 OTUs found in test subject`,
-            xaxis: { title:"sample_values"  },
-            yaxis: { title: "otu ids"}
+            xaxis: { title:"sample_values"},
+            yaxis: {title:"otu ids"}
         };
             
         // 8. Plot the chart to a div tag with id "bar-plot"
@@ -116,12 +134,12 @@ function buildPlot(){
         
         
         var Bubble_d = {
-            x:bubble_labels_940[0],
-            y:bubble_values_940[0],
+            x:bubble_labels,
+            y:bubble_values,
             mode:'markers',
             marker:{
-                color:bubble_labels_940[0],
-                size:bubble_values_940[0]
+                color:bubble_labels,
+                size:bubble_values
             }
         };
         var Bubble=[Bubble_d];

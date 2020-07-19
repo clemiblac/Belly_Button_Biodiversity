@@ -53,6 +53,7 @@ function buildPlot(){
 
             //Use `otu_ids` as the labels for the bar chart.
             var labels = sample_record.otu_ids;
+            var labels2 = sample_record.otu_ids;
             console.log("otu_ids/labels");
             console.log(labels);
             //Use `otu_labels` as the hovertext for the chart.
@@ -61,20 +62,22 @@ function buildPlot(){
             console.log(hovertext);
             //hbar variables
             var bar_values = values;
-            var bar_labels= labels;
+            var bar_labels= labels2;
             var bar_hover = hovertext;
+            
             console.log("choice sample values");
             console.log(bar_values);
             console.log("choice OTU IDs");
             console.log(bar_labels);
-            //bubble variables
-            var bubble_values = values;
-            var bubble_labels = labels;
-            var bubble_hover = hovertext;
+            
             //Plot Code
+            /*for(var i=0;i<labels2.length;i++){
+                labels2[i]="#"+labels2[i];
+            }*/
             // Display the default plot
             //  Create  trace.
             var hbar_data = [{
+                text:bar_hover,
                 type: 'bar',
                 x: bar_values.slice(0,11),
                 transforms: [{
@@ -97,10 +100,16 @@ function buildPlot(){
             // 8. Plot the chart to a div tag with id "bar-plot"
             Plotly.newPlot('bar', hbar_data, layout);
 
+            //bubble variables
+            var bubble_values = values;
+            var bubble_labels = labels;
+            var bubble_hover = hovertext;
+
             //Bubble graph
             var Bubble_d = {
                 x:bubble_labels,
                 y:bubble_values,
+                text:bubble_hover,
                 mode:'markers',
                 marker:{
                     color:bubble_labels,
@@ -127,10 +136,6 @@ function buildPlot(){
 buildPlot();
     
         
-/*
-code to change the labels of the horizontal bar chart.
-It keep chaging labels for all graphs instead of just bar
-for(var i=0;i<array.length;i++){
-    array[i]="#"+array[i];
-    }
-*/ 
+
+
+

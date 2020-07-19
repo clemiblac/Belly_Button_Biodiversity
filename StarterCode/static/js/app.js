@@ -124,6 +124,47 @@ function buildPlot(){
             width: 1000
             };
             Plotly.newPlot("bubble", Bubble,layout);
+
+            //gauge plot
+            console.log(demographic_info[0].wfreq)
+            
+            //console.log(freq)
+            var gaugedata = [
+                {
+                  type: "indicator",
+                  mode: "gauge+number",
+                  value: demographic_info[0].wfreq,
+                  title: { text: "Scrubs per week", font: { size: 24 } },
+                  gauge: {
+                    axis: { range: [null, 9], tickwidth: 1, tickcolor: "darkblue" },
+                    bar: { color: "red" },
+                    bgcolor: "white",
+                    borderwidth: 2,
+                    bordercolor: "gray",
+                    steps: [
+                      { range: [0, 2], color: "ivory" },
+                      { range: [2, 3], color:"bisque"},
+                      { range: [3, 4], color:"grey"},
+                      { range: [4, 5], color:"aqua"},
+                      { range: [5, 6], color:"springgreen"},
+                      { range: [6, 7], color:"chartreuse"},
+                      { range: [7, 8], color:"lawngreen"},
+                      { range: [8, 9], color:"lime"}
+                      
+                    ]
+                  }
+                }
+              ];
+              
+              var layout = {
+                width: 500,
+                height: 400,
+                margin: { t: 25, r: 25, l: 25, b: 25 },
+                paper_bgcolor: "lavender",
+                font: { color: "darkblue", family: "Arial" }
+              };
+              
+              Plotly.newPlot('gauge', gaugedata, layout);
                 
         })
     

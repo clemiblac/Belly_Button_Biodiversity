@@ -165,55 +165,66 @@ function buildPlot(){
        
         /////Demographic Info
         d3.select("select").on("change",function(d){
-            var selected = d3.select("#selDataset").node().value;
-            console.log(selected);
+            //var selected = d3.select("#selDataset").node().value;
+            //console.log(selected);
+            //selected.style("color","green")
 
             ///metadata
-            d3.select("#sample-metadata").text(selected);
-            var metadata_values=data.metadata;
-            var demographic_info=metadata_values.filter(s=>s.id==selected)
-            console.log(demographic_info)
-            d3.select("#sample-metadata").append("p").text(`ID: ${demographic_info[0].id}`)
-            d3.select("#sample-metadata").append("p").text(`ETHNICITY:: ${demographic_info[0].ethnicity}`)
-            d3.select("#sample-metadata").append("p").text(`GENDER: ${demographic_info[0].gender}`)
-            d3.select("#sample-metadata").append("p").text(`AGE: ${demographic_info[0].age}`)
-            d3.select("#sample-metadata").append("p").text(`LOCATION: ${demographic_info[0].location}`)
-            d3.select("#sample-metadata").append("p").text(`BBTYPE: ${demographic_info[0].bbtype}`)
-            d3.select("#sample-metadata").append("p").text(`WFREQ: ${demographic_info[0].wfreq}`)
+            //d3.select("#sample-metadata").text(selected);
+         
+
+            var metadata=data.metadata;
+            var resultArray=metadata.filter(s=>s.id==d3.select("#selDataset").node().value)
+
+            //var resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
+            var result = resultArray[0];
+            // Use d3 to select the panel with id of `#sample-metadata`
+            var PANEL = d3.select("#sample-metadata");
+        
+            // Use `.html("") to clear any existing metadata
+            PANEL.html("");
+        
+            // Use `Object.entries` to add each key and value pair to the panel
+            // Hint: Inside the loop, you will need to use d3 to append new
+            // tags for each key-value in the metadata.
+            Object.entries(result).forEach(([key, value]) => {
+              PANEL.append("h6").text(`${key.toUpperCase()}: ${value}`);
+            });
+        
 
 
             //// Exploring data for plots ///////////////////
-            console.log("samples subsection of samples.json");
+           // console.log("samples subsection of samples.json");
             var sample_d=data.samples;
             //console.log(sample_d);
-            var sample_record=sample_d.filter(s=>s.id==selected)
+            var sample_record=sample_d.filter(s=>s.id==d3.select("#selDataset").node().value)
             sample_record=sample_record[0]
-            console.log("sample of choice")
-            console.log(sample_record)
+            //console.log("sample of choice")
+            //console.log(sample_record)
 
             //Use `sample_values` as the values for the bar chart.
             var values=sample_record.sample_values
-            console.log("samples_values/values");
-            console.log(values);
+            //console.log("samples_values/values");
+            //console.log(values);
 
             //Use `otu_ids` as the labels for the bar chart.
             var labels = sample_record.otu_ids;
             var labels2 = sample_record.otu_ids;
-            console.log("otu_ids/labels");
-            console.log(labels);
+            //console.log("otu_ids/labels");
+            //console.log(labels);
             //Use `otu_labels` as the hovertext for the chart.
             var hovertext = sample_record.otu_labels;
-            console.log("otu_labels/hovertext");
-            console.log(hovertext);
+            //console.log("otu_labels/hovertext");
+            //console.log(hovertext);
             //hbar variables
             var bar_values = values;
             var bar_labels= labels2;
             var bar_hover = hovertext;
             
-            console.log("choice sample values");
-            console.log(bar_values);
-            console.log("choice OTU IDs");
-            console.log(bar_labels);
+            //console.log("choice sample values");
+            //console.log(bar_values);
+            //console.log("choice OTU IDs");
+            //console.log(bar_labels);
             
             //Plot Code
            
@@ -242,10 +253,6 @@ function buildPlot(){
             Plotly.newPlot("bar", barData, barLayout);
 
 
-
-            
-            
-
             //bubble variables
             var bubble_values = values;
             var bubble_labels = labels;
@@ -267,11 +274,13 @@ function buildPlot(){
             title: 'Bubble Chart of each Sample',
             showlegend: false,
             height: 600,
-            width: 1000
+            width: 1000,
+            xaxis: { title: "OTU ID" }
             };
             Plotly.newPlot("bubble", Bubble,layout);
 
             //gauge plot
+            var demographic_info=metadata.filter(s=>s.id==d3.select("#selDataset").node().value)
             console.log(demographic_info[0].wfreq)
             
             //console.log(freq)

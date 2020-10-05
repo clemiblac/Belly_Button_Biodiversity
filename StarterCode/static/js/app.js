@@ -5,6 +5,149 @@ function buildPlot(){
         console.log(data)
         
         //3 main parts of samples.json -- names, metadata,samples
+
+        /////////         default data ///////////////////////////////////////////
+        
+        d3.select("#sample-metadata").append("p").text(`ID: ${data.metadata[0].id}`)
+        d3.select("#sample-metadata").append("p").text(`ETHNICITY:: ${data.metadata[0].ethnicity}`)
+        d3.select("#sample-metadata").append("p").text(`GENDER: ${data.metadata[0].gender}`)
+        d3.select("#sample-metadata").append("p").text(`AGE: ${data.metadata[0].age}`)
+        d3.select("#sample-metadata").append("p").text(`LOCATION: ${data.metadata[0].location}`)
+        d3.select("#sample-metadata").append("p").text(`BBTYPE: ${data.metadata[0].bbtype}`)
+        d3.select("#sample-metadata").append("p").text(`WFREQ: ${data.metadata[0].wfreq}`)
+
+
+
+        //// Exploring data for default plots ///////////////////
+        //console.log("samples subsection of samples.json");
+        var sample_default=data.samples;
+        //console.log(sample_default);
+        var sample_record_default=sample_default.filter(s=>s.id=="940")
+
+        // console.log("default choice")
+        //console.log(sample_record_default)
+
+        // //Use `sample_values` as the values for the bar chart.
+        var default_values=sample_record_default[0].sample_values
+        //console.log("samples_values/values");
+        //console.log(default_values);
+
+        //Use `otu_ids` as the labels for the bar chart.
+        var default_labels = sample_record_default[0].otu_ids;
+        var default_labels2 = sample_record_default[0].otu_ids;
+        //console.log("otu_ids/labels");
+        //console.log(default_labels);
+        //Use `otu_labels` as the hovertext for the chart.
+        var default_hovertext = sample_record_default[0].otu_labels;
+        // console.log("otu_labels/hovertext");
+        //console.log(default_hovertext);
+        //hbar variables
+        var default_bar_values = default_values;
+        var default_bar_labels= default_labels2;
+        var default_bar_hover = default_hovertext;
+        
+        // console.log("choice sample values");
+        // console.log(bar_values);
+        // console.log("choice OTU IDs");
+        // console.log(bar_labels);
+
+
+        // Display the default plot
+        //  Create  trace.
+        var default_hbar_data = [{
+            text:default_bar_hover,
+            type: 'bar',
+            x: default_bar_values.slice(0,11),
+            transforms: [{
+                type: 'sort',
+                target: 'x',
+                order: 'ascending'
+            },{
+                type: 'filter',
+                target: 'x',
+                operation: '>',
+                value: 1
+            }], 
+        }];
+        // 7. Define our plot layout
+        var default_layout = {
+            title: `Top 10 OTUs found in test subject`,
+            xaxis: { title:"sample values"},
+            yaxis: {title:"otu ids"}
+        };
+        // 8. Plot the chart to a div tag with id "bar-plot"
+        Plotly.newPlot('bar', default_hbar_data, default_layout);
+
+
+        //bubble variables
+        var default_bubble_values = default_values;
+        var default_bubble_labels = default_labels;
+        var default_bubble_hover = default_hovertext;
+
+        //Bubble graph
+        var default_Bubble_d = {
+            x:default_bubble_labels,
+            y:default_bubble_values,
+            text:default_bubble_hover,
+            mode:'markers',
+            marker:{
+                color:default_bubble_labels,
+                size:default_bubble_values
+            }
+        };
+
+        var default_Bubble=[default_Bubble_d];
+        var default_layout2 = {
+        title: 'Bubble Chart of each Sample',
+        showlegend: false,
+        height: 600,
+        width: 1000
+        };
+        Plotly.newPlot("bubble", default_Bubble,default_layout2);
+
+
+        ///////////////////    gauge plot
+        //console.log(data.metadata[0].wfreq)
+                            
+        var default_gaugedata = [{
+            type: "indicator",
+            mode: "gauge+number",
+            value: data.metadata[0].wfreq,
+            title: { text: "Scrubs per week", font: { size: 24 } },
+            gauge: {
+                axis: { range: [null, 9], tickwidth: 1, tickcolor: "darkblue" },
+                bar: { color: "red" },
+                bgcolor: "white",
+                borderwidth: 2,
+                bordercolor: "gray",
+                steps: [
+                    { range: [0, 2], color: "ivory" },
+                    { range: [2, 3], color:"bisque"},
+                    { range: [3, 4], color:"grey"},
+                    { range: [4, 5], color:"aqua"},
+                    { range: [5, 6], color:"springgreen"},
+                    { range: [6, 7], color:"chartreuse"},
+                    { range: [7, 8], color:"lawngreen"},
+                    { range: [8, 9], color:"lime"}
+                
+                ]
+            }
+        }];
+  
+        var default_layout3 = {
+            width: 500,
+            height: 400,
+            margin: { t: 25, r: 25, l: 25, b: 25 },
+            paper_bgcolor: "lavender",
+            font: { color: "darkblue", family: "Arial" }
+        };
+        
+        Plotly.newPlot('gauge', default_gaugedata, default_layout3);
+
+
+
+
+        ///////////////////////////     D R O P D O W N     ///////////////////////////////////
         ///////////  BUILDING DROP DOWN MENU FOR EACH TEST SUBJECT /////////////////////
         //saving "names" Array in samples.json to a variable
         var select_id=data.names;
@@ -71,9 +214,7 @@ function buildPlot(){
             console.log(bar_labels);
             
             //Plot Code
-            /*for(var i=0;i<labels2.length;i++){
-                labels2[i]="#"+labels2[i];
-            }*/
+           
             // Display the default plot
             //  Create  trace.
             var hbar_data = [{

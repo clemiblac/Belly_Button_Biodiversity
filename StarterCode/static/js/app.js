@@ -9,7 +9,7 @@ function buildPlot(){
         /////////         default data ///////////////////////////////////////////
         
         d3.select("#sample-metadata").append("p").text(`ID: ${data.metadata[0].id}`)
-        d3.select("#sample-metadata").append("p").text(`ETHNICITY:: ${data.metadata[0].ethnicity}`)
+        d3.select("#sample-metadata").append("p").text(`ETHNICITY: ${data.metadata[0].ethnicity}`)
         d3.select("#sample-metadata").append("p").text(`GENDER: ${data.metadata[0].gender}`)
         d3.select("#sample-metadata").append("p").text(`AGE: ${data.metadata[0].age}`)
         d3.select("#sample-metadata").append("p").text(`LOCATION: ${data.metadata[0].location}`)
@@ -53,31 +53,33 @@ function buildPlot(){
 
 
         // Display the default plot
-        //  Create  trace.
-        var default_hbar_data = [{
-            text:default_bar_hover,
-            type: 'bar',
-            x: default_bar_values.slice(0,11),
-            transforms: [{
-                type: 'sort',
-                target: 'x',
-                order: 'ascending'
-            },{
-                type: 'filter',
-                target: 'x',
-                operation: '>',
-                value: 1
-            }], 
-        }];
-        // 7. Define our plot layout
-        var default_layout = {
-            title: `Top 10 OTUs found in test subject`,
-            xaxis: { title:"sample values"},
-            yaxis: {title:"otu ids"}
-        };
-        // 8. Plot the chart to a div tag with id "bar-plot"
-        Plotly.newPlot('bar', default_hbar_data, default_layout);
+        //  Create  trace
 
+
+        var def_yticks = default_labels.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse();
+        var def_barData = [
+          {
+            y: def_yticks,
+            x: default_bar_values.slice(0, 10).reverse(),
+            text: default_bar_values.slice(0, 10).reverse().map(String),
+            textposition: 'auto',
+            type: "bar",
+            orientation: "h",
+          }
+        ];
+    
+        var def_barLayout = {
+          title: "Top 10 Bacteria Cultures Found",
+          margin: { t: 30, l: 150 },
+          xaxis: { title:"sample values"},
+          yaxis: {title:"otu ids"}
+    
+
+        };
+        Plotly.newPlot("bar", def_barData, def_barLayout);
+     
+    
+    
 
         //bubble variables
         var default_bubble_values = default_values;
@@ -88,7 +90,6 @@ function buildPlot(){
         var default_Bubble_d = {
             x:default_bubble_labels,
             y:default_bubble_values,
-            text:default_bubble_hover,
             mode:'markers',
             marker:{
                 color:default_bubble_labels,
@@ -98,10 +99,11 @@ function buildPlot(){
 
         var default_Bubble=[default_Bubble_d];
         var default_layout2 = {
-        title: 'Bubble Chart of each Sample',
+        title: "Bacteria Cultures Per Sample",
         showlegend: false,
         height: 600,
-        width: 1000
+        width: 1000,
+        xaxis: { title: "OTU ID" },
         };
         Plotly.newPlot("bubble", default_Bubble,default_layout2);
 
@@ -217,29 +219,32 @@ function buildPlot(){
            
             // Display the default plot
             //  Create  trace.
-            var hbar_data = [{
-                text:bar_hover,
-                type: 'bar',
-                x: bar_values.slice(0,11),
-                transforms: [{
-                    type: 'sort',
-                    target: 'x',
-                    order: 'ascending'
-                },{
-                    type: 'filter',
-                    target: 'x',
-                    operation: '>',
-                    value: 1
-                }], 
-            }];
-            // 7. Define our plot layout
-            var layout = {
-                title: `Top 10 OTUs found in test subject`,
-                xaxis: { title:"sample values"},
-                yaxis: {title:"otu ids"}
+            var yticks = bar_labels.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse();
+            var barData = [
+            {
+                y: yticks,
+                x: bar_values.slice(0, 10).reverse(),
+                text: bar_values.slice(0, 10).reverse().map(String),
+                textposition: 'auto',
+                type: "bar",
+                orientation: "h",
+            }
+            ];
+    
+            var barLayout = {
+            title: "Top 10 Bacteria Cultures Found",
+            margin: { t: 30, l: 150 },
+            xaxis: { title:"sample values"},
+            yaxis: {title:"otu ids"}
+        
+
             };
-            // 8. Plot the chart to a div tag with id "bar-plot"
-            Plotly.newPlot('bar', hbar_data, layout);
+            Plotly.newPlot("bar", barData, barLayout);
+
+
+
+            
+            
 
             //bubble variables
             var bubble_values = values;
